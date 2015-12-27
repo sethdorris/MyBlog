@@ -45,6 +45,17 @@ namespace MyBlog.Tests.Models
             _mycontext.Setup(p => p.Posts).Returns(_postSet.Object);
         }
 
+        [TestMethod]
+        public void ConnectMocksToDataStore(IEnumerable<User> data_source)
+        {
+            var data = data_source.AsQueryable();
+            _userSet.As<IQueryable<User>>().Setup(p => p.Provider).Returns(data.Provider);
+            _userSet.As<IQueryable<User>>().Setup(p => p.Expression).Returns(data.Expression);
+            _userSet.As<IQueryable<User>>().Setup(p => p.ElementType).Returns(data.ElementType);
+            _userSet.As<IQueryable<User>>().Setup(p => p.GetEnumerator()).Returns(data.GetEnumerator());
+            _mycontext.Setup(p => p.BlogUsers).Returns(_userSet.Object);
+        }
+
 
         [TestMethod]
         public void BlogRepoTestsEnsureICanGetAllPosts()
@@ -58,6 +69,21 @@ namespace MyBlog.Tests.Models
             ConnectMocksToDataStore(expected);
             List<Post> actual = _myrepo.GetAllPosts();
             Assert.AreEqual(expected[0].PostID, actual[0].PostID);
+            CollectionAssert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void BlogRepoTestsEnsureICanGetAllUsers()
+        {
+            List<User> expected = new List<User>
+            {
+                new User { Handle = "Stiff", UserID = 1, Age = 28 },
+                new User { Handle = "Bob", UserID = 2, Age = 31 }
+            };
+
+            ConnectMocksToDataStore(expected);
+            List<User> actual = _myrepo.GetAllUsers();
+            Assert.AreEqual(expected[0].Handle, actual[0].Handle);
             CollectionAssert.AreEqual(expected, actual);
         }
     }
