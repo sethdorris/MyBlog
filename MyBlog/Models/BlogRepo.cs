@@ -20,5 +20,11 @@ namespace MyBlog.Models
             var query = from posts in context.Posts select posts;
             return query.ToList();
         }
+
+        public List<User> GetAllUsers()
+        {
+            var query = from users in context.BlogUsers select users;
+            return query.ToList();
+        }
     }
 }
