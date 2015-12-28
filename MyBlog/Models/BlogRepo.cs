@@ -26,5 +26,11 @@ namespace MyBlog.Models
             var query = from users in context.BlogUsers select users;
             return query.ToList();
         }
+
+        public List<User> GetUserByHandle(string handle)
+        {
+            var query = from users in context.BlogUsers.Where(o => o.Handle.Contains(handle)) select users;
+            return query.ToList();
+        }
     }
 }
