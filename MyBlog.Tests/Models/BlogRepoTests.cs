@@ -86,5 +86,19 @@ namespace MyBlog.Tests.Models
             Assert.AreEqual(expected[0].Handle, actual[0].Handle);
             CollectionAssert.AreEqual(expected, actual);
         }
+
+        [TestMethod]
+        public void BlogRepoTestsEnsureICanGetAllUsersByHandle()
+        {
+            List<User> expected = new List<User>
+            {
+                new User { Handle = "Stiff", UserID = 1, Age = 28 },
+                new User { Handle = "Bob", UserID = 2, Age = 31 }
+            };
+
+            ConnectMocksToDataStore(expected);
+            List<User> actual = _myrepo.GetUserByHandle("Stiff");
+            Assert.AreEqual(expected[0].Handle, actual[0].Handle);
+        }
     }
 }
