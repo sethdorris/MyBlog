@@ -100,5 +100,21 @@ namespace MyBlog.Tests.Models
             List<User> actual = _myrepo.GetUserByHandle("Stiff");
             Assert.AreEqual(expected[0].Handle, actual[0].Handle);
         }
+
+        [TestMethod]
+        public void BlogRepoTestsEnsureICanSearchPostsByContent()
+        {
+            List<Post> expected = new List<Post>
+            {
+                new Post { PostID = 1, Content = "Movies are cool", DateTime = new DateTime(2015, 12, 12) },
+                new Post { PostID = 2, Content = "Football is awesome" },
+                new Post { PostID = 3, Content = "I like movies", DateTime = new DateTime(2015, 12, 25) }
+            };
+
+            ConnectMocksToDataStore(expected);
+            List<Post> actual = _myrepo.SearchPostsByContent("movies");
+            Assert.AreEqual(2, actual.Count);
+            Assert.AreEqual(3, actual[1].PostID);
+        }
     }
 }
